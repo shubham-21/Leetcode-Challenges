@@ -1,0 +1,60 @@
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum=0;
+        Arrays.sort(nums);
+        for (int i=0;i<nums.length;i++)
+        {
+            sum=sum+nums[i];
+            
+        }
+        if (sum%2==1)
+            return false;
+        sum=sum/2;
+        boolean[][] dp= new boolean [nums.length+1][sum+1];      
+        dp[0][0]=true;
+        for (int i=1;i<dp[0].length;i++)
+        {
+            dp[0][i]=false;
+        }
+        for (int i=1;i<dp.length;i++)
+        {
+            for (int j=0;j<dp[i].length;j++)
+            {
+                boolean TVIncluding= dp[i-1][j];
+                if (TVIncluding)
+                {
+                    dp[i][j]= true;
+                }
+                else{
+                    boolean TVExcluding =false;
+                    int newval=nums[i-1];
+                    if (newval<= j)
+                        {
+                            int remval= j-newval;
+                            if (dp[i-1][remval]==true)
+                            {
+                                 TVExcluding= true;
+                            }
+                            else{
+                                 TVExcluding= false;
+                            }
+                        }
+                    dp[i][j]= TVIncluding || TVExcluding;
+                }
+            
+            }
+        }
+        
+                
+//         for (int i=0;i<dp.length;i++)
+//         {
+//             for (int j=0;j<dp[0].length;j++)
+//             {
+//                 System.out.print(dp[i][j]);
+//                 System.out.print(" ");
+//             }
+//             System.out.println();
+//         }
+        return dp[nums.length][sum];
+    }
+}
